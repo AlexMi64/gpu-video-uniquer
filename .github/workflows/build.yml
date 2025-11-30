@@ -26,13 +26,16 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller --onefile --noconsole --hidden-import cv2 --hidden-import numba --hidden-import multiprocessing.gui.py --add-data "config.py;." gui.py --name VideoUniquifier
+        pyinstaller --onedir --noconsole --hidden-import cv2 --hidden-import numba --hidden-import multiprocessing --hidden-import sklearn.utils --hidden-import sklearn.utils.validation --hidden-import pkg_resources --hidden-import pkg_resources.extern --hidden-import pkg_resources._vendor.jaraco --hidden-import pkg_resources._vendor.jaraco.text --hidden-import setuptools._vendor.jaraco.text --copy-metadata tqdm --copy-metadata numpy --copy-metadata opencv-python gui.py --name VideoUniquifier
+        cd dist/VideoUniquifier
+        zip -r ../VideoUniquifier-windows.zip .
+        cd ..
 
     - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
         name: VideoUniquifier-Executable
-        path: dist/VideoUniquifier.exe
+        path: dist/VideoUniquifier-windows.zip
 
     - name: Upload build files
       uses: actions/upload-artifact@v4
