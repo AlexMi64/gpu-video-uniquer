@@ -26,8 +26,8 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller --onedir --noconsole --hidden-import cv2 --hidden-import numba --hidden-import multiprocessing --hidden-import multiprocessing.sharedctypes --hidden-import multiprocessing.dummy --hidden-import sklearn.utils --hidden-import sklearn.utils.validation --hidden-import pkg_resources --hidden-import pkg_resources.extern --hidden-import pkg_resources._vendor.jaraco --hidden-import pkg_resources._vendor.jaraco.text --hidden-import setuptools._vendor.jaraco.text --hidden-import _internal --hidden-import _internal.python --hidden-import importlib --hidden-import importlib.util --copy-metadata tqdm --copy-metadata numpy --copy-metadata opencv-python --include-path . --collect-all sklearn --collect-all cv2 --collect-all numba gui.py --name VideoUniquifier
-        powershell "Compress-Archive -Path 'dist\VideoUniquifier\*' -DestinationPath 'dist\VideoUniquifier-windows.zip'"
+        pyinstaller --onedir --noconsole --hidden-import cv2 --hidden-import numba --hidden-import multiprocessing --hidden-import multiprocessing.sharedctypes --hidden-import multiprocessing.dummy --hidden-import sklearn.utils --hidden-import sklearn.utils.validation --hidden-import pkg_resources --hidden-import pkg_resources.extern --hidden-import pkg_resources._vendor.jaraco --hidden-import pkg_resources._vendor.jaraco.text --hidden-import setuptools._vendor.jaraco.text --hidden-import _internal --hidden-import _internal.python --hidden-import importlib --hidden-import importlib.util -p . --copy-metadata tqdm --copy-metadata numpy --copy-metadata opencv-python --collect-all sklearn --collect-all cv2 --collect-all numba gui.py --name VideoUniquifier
+        powershell "Compress-Archive -Path 'dist\VideoUniquifier' -DestinationPath 'dist\VideoUniquifier-windows.zip' -Force"
 
     - name: Upload executable
       uses: actions/upload-artifact@v4
