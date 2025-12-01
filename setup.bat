@@ -75,21 +75,34 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo Creating shortcuts...
-powershell -Command "if (!(Test-Path 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\GPU Video Uniquifier')) { New-Item -ItemType Directory -Path 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\GPU Video Uniquifier' }"
-powershell -Command "$WScriptShell = New-Object -ComObject WScript.Shell; $Shortcut = $WScriptShell.CreateShortcut('C:\ProgramData\Microsoft\Windows\Start Menu\Programs\GPU Video Uniquifier\GPU Video Uniquifier.lnk'); $Shortcut.TargetPath = 'python'; $Shortcut.Arguments = '\"%~dp0gui.py\"'; $Shortcut.WorkingDirectory = '%~dp0'; $Shortcut.IconLocation = 'python.exe,0'; $Shortcut.Description = 'GPU Video Uniquifier - High-performance video processing'; $Shortcut.Save()"
+echo Creating shortcuts (may require admin rights)...
+powershell -Command "try { if (!(Test-Path 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\GPU Video Uniquifier')) { New-Item -ItemType Directory -Path 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\GPU Video Uniquifier' -Force } } catch { Write-Host 'Start Menu shortcut skipped (admin rights needed)' }" 2>nul
 
-powershell -Command "$WScriptShell = New-Object -ComObject WScript.Shell; $Shortcut = $WScriptShell.CreateShortcut([System.Environment]::GetFolderPath('Desktop') + '\GPU Video Uniquifier.lnk'); $Shortcut.TargetPath = 'python'; $Shortcut.Arguments = '\"%~dp0gui.py\"'; $Shortcut.WorkingDirectory = '%~dp0'; $Shortcut.IconLocation = 'python.exe,0'; $Shortcut.Description = 'GPU Video Uniquifier - High-performance video processing'; $Shortcut.Save()"
+powershell -Command "try { $WScriptShell = New-Object -ComObject WScript.Shell; $Shortcut = $WScriptShell.CreateShortcut('C:\ProgramData\Microsoft\Windows\Start Menu\Programs\GPU Video Uniquifier\GPU Video Uniquifier.lnk'); $Shortcut.TargetPath = 'python'; $Shortcut.Arguments = '\"%~dp0gui.py\"'; $Shortcut.WorkingDirectory = '%~dp0'; $Shortcut.IconLocation = 'python.exe,0'; $Shortcut.Description = 'GPU Video Uniquifier - High-performance video processing'; $Shortcut.Save() } catch { Write-Host 'Start Menu shortcut failed' }" 2>nul
+
+powershell -Command "try { $WScriptShell = New-Object -ComObject WScript.Shell; $Shortcut = $WScriptShell.CreateShortcut([System.Environment]::GetFolderPath('Desktop') + '\GPU Video Uniquifier.lnk'); $Shortcut.TargetPath = 'python'; $Shortcut.Arguments = '\"%~dp0gui.py\"'; $Shortcut.WorkingDirectory = '%~dp0'; $Shortcut.IconLocation = 'python.exe,0'; $Shortcut.Description = 'GPU Video Uniquifier - High-performance video processing'; $Shortcut.Save() } catch { Write-Host 'Desktop shortcut failed' }" 2>nul
+powershell -Command "try { $WScriptShell = New-Object -ComObject WScript.Shell; $Shortcut = $WScriptShell.CreateShortcut('%USERPROFILE%\Desktop\GPU Video Uniquifier.lnk'); $Shortcut.TargetPath = 'python'; $Shortcut.Arguments = '\"%~dp0gui.py\"'; $Shortcut.WorkingDirectory = '%~dp0'; $Shortcut.IconLocation = 'python.exe,0'; $Shortcut.Description = 'GPU Video Uniquifier - High-performance video processing'; $Shortcut.Save() } catch { Write-Host 'User Desktop shortcut failed' }" 2>nul
 
 echo.
 echo ================================================================
 echo       Installation completed successfully!
 echo ================================================================
 echo.
-echo Shortcuts created:
-echo - Desktop: GPU Video Uniquifier
-echo - Start Menu: GPU Video Uniquifier folder
+echo IMPORTANT: How to run the application:
 echo.
-echo Run the application by clicking any of the created shortcuts!
+echo Option 1 - GUI Interface (Recommended):
+echo python gui.py
 echo.
+echo Option 2 - Command Line Processing:
+echo python video_uniquifier.py --help
+echo.
+echo Option 3 - Run batch files:
+echo run_uniquifier.bat (when you put video files here)
+echo.
+echo Graphics Card Support:
+if "%errorlevel%"=="0" (
+    python -c "import cv2; print('✓ CUDA available:', cv2.cuda.getCudaEnabledDeviceCount() > 0)" 2>nul || echo "✓ OpenCV loaded, CUDA support unknown"
+)
+echo.
+echo =================================================================
 pause
