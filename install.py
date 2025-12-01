@@ -45,12 +45,6 @@ def install_dependencies():
 
     if version >= (3, 13):
         # Python 3.13 compatibility - use tested precompiled wheels
-        dependencies = [
-            'numpy>=2.0,<2.3',
-            'tqdm>=4.66',
-            '--only-binary=all',
-            'opencv-python==4.8.1.78'
-        ]
         print("✓ Using precompiled wheels for Python 3.13+")
     else:
         # Standard versions
@@ -59,6 +53,25 @@ def install_dependencies():
             'tqdm>=4.66',
             'opencv-python==4.10.0.84'
         ]
+
+    # Install packages sequentially for Python 3.13+ with binary-only flag
+    if version >= (3, 13):
+        dependencies_313 = [
+            ['numpy>=2.0,<2.3'],
+            ['tqdm>=4.66'],
+            ['opencv-python==4.8.1.78', '--only-binary=all']
+        ]
+
+        for dep_list in dependencies_313:
+            try:
+                print(f"Installing {dep_list[0]}...")
+                cmd = [sys.executable, '-m', 'pip', 'install'] + dep_list
+                subprocess.check_call(cmd)
+                print(f"✓ {dep_list[0]} installed successfully")
+            except subprocess.CalledProcessError as e:
+                print(f"✗ Failed to install {dep_list[0]}: {e}")
+                return False
+        return True
 
     for dep in dependencies:
         try:
