@@ -17,7 +17,7 @@ jobs:
     - name: Create portable archive
       run: |
         # Create ZIP with all files
-        Compress-Archive -Path "config.py", "video_uniquifier.py", "gui.py", "run_uniquifier.bat", "build_exe.bat", "requirements.txt", "README.md", "setup.bat" -DestinationPath "GPU-Video-Uniquifier-Portable.zip"
+        Compress-Archive -Path "config.py", "video_uniquifier.py", "gui.py", "run_uniquifier.bat", "build_exe.bat", "requirements.txt", "README.md", "setup.bat", "install.py" -DestinationPath "GPU-Video-Uniquifier-Portable.zip"
 
     - name: Upload portable archive
       uses: actions/upload-artifact@v4
