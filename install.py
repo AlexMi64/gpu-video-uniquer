@@ -44,13 +44,14 @@ def install_dependencies():
     print(f"Installing packages for Python {version.major}.{version.minor}...")
 
     if version >= (3, 13):
-        # Python 3.13 compatibility - use precompiled wheels
+        # Python 3.13 compatibility - use tested precompiled wheels
         dependencies = [
             'numpy>=2.0,<2.3',
             'tqdm>=4.66',
-            'opencv-python>=4.8.0,<4.10'
+            '--only-binary=all',
+            'opencv-python==4.8.1.78'
         ]
-        print("✓ Using compatible versions for Python 3.13+")
+        print("✓ Using precompiled wheels for Python 3.13+")
     else:
         # Standard versions
         dependencies = [
