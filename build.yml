@@ -1,0 +1,26 @@
+name: Create Portable Distribution
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Create portable archive
+      run: |
+        # Create ZIP with all files
+        Compress-Archive -Path "config.py", "video_uniquifier.py", "gui.py", "run_uniquifier.bat", "build_exe.bat", "requirements.txt", "README.md", "setup.bat" -DestinationPath "GPU-Video-Uniquifier-Portable.zip"
+
+    - name: Upload portable archive
+      uses: actions/upload-artifact@v4
+      with:
+        name: VideoUniquifier-Portable
+        path: GPU-Video-Uniquifier-Portable.zip
