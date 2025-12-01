@@ -1,4 +1,4 @@
-name: Create Portable Distribution
+name: Build Windows x64 Executable
 
 on:
   push:
@@ -14,13 +14,43 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Create portable archive
-      run: |
-        # Create ZIP with all files
-        Compress-Archive -Path "config.py", "video_uniquifier.py", "gui.py", "run_uniquifier.bat", "build_exe.bat", "requirements.txt", "README.md", "setup.bat", "install.py" -DestinationPath "GPU-Video-Uniquifier-Portable.zip"
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
 
-    - name: Upload portable archive
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Build executable with PyInstaller
+      run: |
+        pyinstaller --onefile --noconsole --hidden-import cv2 --hidden-import numba --hidden-import multiprocessing --copy-metadata tqdm --copy-metadata numpy --copy-metadata opencv-python gui.py --name GPU-Video-Uniquifier-x64 --distpath .
+
+    - name: Create portable package
+      run: |
+        # Copy additional files
+        Copy-Item -Path "config.py" -Destination "GPU-Video-Uniquifier-x64\Data\"
+        Copy-Item -Path "video_uniquifier.py" -Destination "GPU-Video-Uniquifier-x64\Data\"
+        Copy-Item -Path "run_uniquifier.bat" -Destination "GPU-Video-Uniquifier-x64\Data\"
+        Copy-Item -Path "build_exe.bat" -Destination "GPU-Video-Uniquifier-x64\Data\"
+        Copy-Item -Path "requirements.txt" -Destination "GPU-Video-Uniquifier-x64\Data\"
+        Copy-Item -Path "README.md" -Destination "GPU-Video-Uniquifier-x64\Data\"
+        Copy-Item -Path "setup.bat" -Destination "GPU-Video-Uniquifier-x64\"
+        Copy-Item -Path "install.py" -Destination "GPU-Video-Uniquifier-x64\"
+
+        # Create ZIP
+        Compress-Archive -Path "GPU-Video-Uniquifier-x64" -DestinationPath "GPU-Video-Uniquifier-Windows-x64.zip" -Force
+
+    - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
-        name: VideoUniquifier-Portable
-        path: GPU-Video-Uniquifier-Portable.zip
+        name: GPU-Video-Uniquifier-x64
+        path: GPU-Video-Uniquifier-Windows-x64.zip
+
+    - name: Upload separate exe
+      uses: actions/upload-artifact@v4
+      with:
+        name: GPU-Video-Uniquifier-exe-only
+        path: GPU-Video-Uniquifier-x64.exe
