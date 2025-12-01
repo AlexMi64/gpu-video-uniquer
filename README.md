@@ -34,9 +34,18 @@
 
 ### Для Windows (Python 3.11+)
 1. Установите Python с [python.org](https://www.python.org/downloads/) (обязательно отметьте "Add Python to PATH").
-2. Откройте командную строку и выполните:
+2. **Запустите установщик автоматически:**
    ```
-   pip install opencv-python-headless numpy tqdm
+   python install.py
+   ```
+   или если не сработает:
+   ```
+   py install.py
+   ```
+
+3. Ручная установка зависимостей:
+   ```
+   pip install numpy tqdm opencv-python
    ```
 3. Скачайте файлы `video_uniquifier.py`, `config.py`, `gui.py` в папку.
 
