@@ -1,4 +1,4 @@
-name: Build Windows Executable
+name: Create Portable Distribution
 
 on:
   push:
@@ -14,32 +14,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-
-    - name: Install dependencies
+    - name: Create portable archive
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        # Create ZIP with all files
+        Compress-Archive -Path "config.py", "video_uniquifier.py", "gui.py", "run_uniquifier.bat", "build_exe.bat", "requirements.txt", "README.md", "setup.bat" -DestinationPath "GPU-Video-Uniquifier-Portable.zip"
 
-    - name: Build executable
-      run: |
-        pyinstaller --onedir --noconsole -p . --hidden-import cv2 --hidden-import numba --hidden-import multiprocessing --hidden-import multiprocessing.util --hidden-import sklearn.utils --collect-all cv2 --collect-all numba --collect-all sklearn --copy-metadata tqdm --copy-metadata numpy --copy-metadata opencv-python gui.py --name VideoUniquifier
-        powershell "Compress-Archive -Path 'dist\VideoUniquifier' -DestinationPath 'dist\VideoUniquifier-windows.zip' -Force"
-
-    - name: Upload executable
+    - name: Upload portable archive
       uses: actions/upload-artifact@v4
       with:
-        name: VideoUniquifier-Executable
-        path: dist/VideoUniquifier-windows.zip
-
-    - name: Upload build files
-      uses: actions/upload-artifact@v4
-      with:
-        name: Build-Files
-        path: |
-          dist/
-          config.py
-          README.md
+        name: VideoUniquifier-Portable
+        path: GPU-Video-Uniquifier-Portable.zip
