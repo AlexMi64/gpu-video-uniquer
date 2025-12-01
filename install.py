@@ -39,11 +39,25 @@ def install_dependencies():
     except subprocess.CalledProcessError:
         print("⚠️ Pip upgrade failed, continuing...")
 
-    dependencies = [
-        'numpy>=2.0,<2.3',
-        'tqdm>=4.66',
-        'opencv-python==4.10.0.84'
-    ]
+    # Check Python version for compatibility
+    version = sys.version_info
+    print(f"Installing packages for Python {version.major}.{version.minor}...")
+
+    if version >= (3, 13):
+        # Python 3.13 compatibility - use precompiled wheels
+        dependencies = [
+            'numpy>=2.0,<2.3',
+            'tqdm>=4.66',
+            'opencv-python>=4.8.0,<4.10'
+        ]
+        print("✓ Using compatible versions for Python 3.13+")
+    else:
+        # Standard versions
+        dependencies = [
+            'numpy>=2.0,<2.3',
+            'tqdm>=4.66',
+            'opencv-python==4.10.0.84'
+        ]
 
     for dep in dependencies:
         try:
