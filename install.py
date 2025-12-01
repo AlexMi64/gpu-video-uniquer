@@ -59,7 +59,7 @@ def install_dependencies():
         dependencies_313 = [
             ['numpy>=2.0,<2.3'],
             ['tqdm>=4.66'],
-            ['opencv-python==4.8.1.78', '--only-binary=all']
+            ['opencv-contrib-python', '--only-binary=all', '--prefer-binary']
         ]
 
         for dep_list in dependencies_313:
